@@ -1,0 +1,8 @@
+services:
+  api:
+    build: .
+    container_name: inventory_api
+    ports:
+      - "8080:3000" # Map Host port 8080 ke Container port 3000
+    environment:
+      - NODE_ENV=production

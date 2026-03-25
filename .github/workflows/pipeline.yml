@@ -1,0 +1,52 @@
+name: CI/CS Pipeline
+
+# Berjalan otomatis saat Push atau PR ke branch main dan develop (sesuai Feature Branch Flow)
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  # 1. CI: Unit Testing
+  ci-test:
+    name: Continuous Integration (Unit Test)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Unit Tests
+        run: npm test
+
+  # 2. CS: Security Scan
+  cs-security-scan:
+    name: Continuous Security (Vulnerability Scan)
+    runs-on: ubuntu-latest
+    needs: ci-test # Berjalan setelah CI test sukses
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Security Audit
+        run: npm audit --audit-level=high
